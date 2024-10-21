@@ -1,0 +1,91 @@
+<div class="landing-container">
+    <mat-card appearance="outlined" class="landing-card ">
+        <mat-card-header>
+            <mat-card-title>
+                <section class="header-tab">
+                    <div class="header">
+                        Scrum Poker
+                    </div>
+                </section>
+            </mat-card-title>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+            <section>
+                <div class="inline-container">
+                    <div class="days-container">
+                        <div class="custom-button-container">
+                            <button mat-fab matTooltip="Don't know what to estimate?">
+                                <mat-icon>help_outline</mat-icon>
+                            </button>
+                        </div>
+                        @for (day of numberOfDays; track $index) {
+                            <div class="button-container" [matTooltip]="day + ' day work'">
+                                <button mat-fab >
+                                    {{day}}
+                                </button>
+                            </div>
+                        }
+                        <div class="custom-button-container">
+                            <button mat-fab matTooltip="Something else in your mind?">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="inline-container-2">
+                    <button mat-button>
+                        <mat-icon>remove_circle_outline</mat-icon>
+                    </button>
+                    <button mat-raised-button>
+                        Delete Estimates
+                    </button>
+                    @if (estimatesHidden) {
+                        <button (click)="showEstimate()" mat-raised-button class="button-grey">
+                            Show
+                        </button>
+                    } @else {
+                        <button (click)="hideEstimate()" mat-raised-button class="button-grey">
+                            Hide
+                        </button>
+                    }
+                    
+                </div>
+            </section>
+
+            <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                @for (column of initColumns; track column.field) {
+                    <ng-container [matColumnDef]="column.field">
+                        <mat-header-cell *matHeaderCellDef>
+                            {{column?.label}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element; let i = index">
+                            @if (column.type === ColumnType.TEXT) {
+                                {{dataAccessor(element, column.field)}}
+                            }
+                            @else {
+                                <div class="inside-card">
+                                    @if (element.hidden) {
+                                        <mat-icon>lock</mat-icon>
+                                    } @else {
+                                        {{ dataAccessor(element, column.field) || '_' }}
+                                    }
+                                    
+                                </div>
+                            }
+                        </mat-cell>
+                    </ng-container>
+                }
+                <mat-header-row *matHeaderRowDef="displayedColumns" sticky="true"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+            </mat-table>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+
+
+<!-- TODO - flip single card -->
+

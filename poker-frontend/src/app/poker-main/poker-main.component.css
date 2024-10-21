@@ -1,0 +1,109 @@
+.landing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /*min-height: 100vh;  Full viewport height */
+  padding: 0 20px; /* Padding for responsiveness */
+}
+
+.landing-card {
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - 20px);
+}
+
+.inside-card {
+  backface-visibility: hidden;
+  transition: transform 0.6s ease-in-out;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Light shadow effect */
+  padding: 10px; /* Spacing inside the card */
+  margin: 5px; /* Space around the card */
+  border: 1px solid #e0e0e0; /* Light border */
+  display: flex; /* Keep the card inline within the table cell */
+  box-sizing: border-box; /* Ensure padding doesn't overflow the card */
+  width: 45px;
+  height: 45px;
+}
+
+.inline-container {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: flex;
+}
+
+.inline-container-2 {
+  padding: 20px 20px 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+:host ::ng-deep .button-grey {
+  background-color: #d3d3d3 !important;
+}
+
+.inline-container-without-padding {
+  display: flex;
+}
+
+.example-button-row {
+  display: flex;
+}
+
+.inline-container .mat-mdc-button-base {
+  margin: 8px 8px 8px 0;
+}
+
+.days-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.example-flex-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0 10px 0 0;
+    width: 120px;
+}
+
+.custom-button-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0 10px 0 0;
+    width: 120px;
+}
+
+.example-button-container {
+  display: flex;
+  justify-content: center;
+  width: 120px;
+}
+
+.header {
+  font-family: math;
+  font-size: xx-large;
+}
+
+.header-tab {
+  min-height: 100px;
+  align-content: center;
+}
+
+.mat-mdc-card-header {
+    display: flex;
+    padding: 10px 16px 10px !important;
+}
+
+
