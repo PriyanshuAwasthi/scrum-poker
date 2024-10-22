@@ -6,6 +6,9 @@
                     <div class="header">
                         Scrum Poker
                     </div>
+                    @for (item of backednRes; track $index) {
+                        {{item.user}}
+                    }
                 </section>
             </mat-card-title>
         </mat-card-header>
@@ -21,7 +24,7 @@
                         </div>
                         @for (day of numberOfDays; track $index) {
                             <div class="button-container" [matTooltip]="day + ' day work'">
-                                <button mat-fab >
+                                <button (click)="handleTestButtonClick()" mat-fab >
                                     {{day}}
                                 </button>
                             </div>

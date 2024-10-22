@@ -8,6 +8,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatDivider} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
 import { PokerRoutingModule } from "./poker-main-routin.module";
+import { SocketService } from "../helper/socket.service";
 
 
 @NgModule({

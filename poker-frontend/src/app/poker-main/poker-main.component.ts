@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ColumnType, tableColumns } from '../helper/tableColumns.model';
 import { usersDataModel } from '../helper/user-data.model';
 import {MatTableDataSource} from '@angular/material/table';
+import { Socket } from 'ngx-socket-io';
+import { SocketService } from '../helper/socket.service';
 
 @Component({
   selector: 'app-poker-main',
@@ -13,6 +15,12 @@ export class PokerMainComponent implements OnInit {
   protected readonly ColumnType = ColumnType;
   numberOfDays: Array<number> = [0.5, 1, 2, 3, 4, 5];
   estimatesHidden: boolean = false;
+
+  backednRes: {
+    sender: string,
+    user: string
+  }[] = [];
+
   users: usersDataModel[] = [
     {
       name: 'Priyanshu',
@@ -85,17 +93,13 @@ export class PokerMainComponent implements OnInit {
 
   displayedColumns = this.initColumns.map((column) => column.field);
 
-
-  constructor() {
-    
-  }
+  constructor(@Inject(SocketService) private socketService: SocketService) {}
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.users);
-    // console.log(this.apiService.getMessage());
-    // this.apiService.getMessage().subscribe({
-    //   next: (resp) => {
-    //     console.log(resp.data);
-    //   }
+    this.socketService.testReceivingMessage().subscribe((res) => console.log(res));
+    // console.log('heyyy');
+    // this.socket.fromEvent('received').pipe((data) => data).subscribe((data) => {
+    //   console.log(data);
     // })
   }
 
@@ -119,5 +123,11 @@ export class PokerMainComponent implements OnInit {
     if (value === undefined) return true;
     if (value === null) return true;
     return false;
+  }
+
+
+  handleTestButtonClick(): void {
+    // this.socket.emit('score', 2);
+    this.socketService.testSendingMethod('3');
   }
 }

@@ -4,6 +4,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PokerMainModule } from './poker-main/poker-main.module';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+
+const socketConfig: SocketIoConfig = {
+  url: 'http://localhost:3000',
+  options: {}
+}
 
 @NgModule({
   declarations: [
@@ -12,7 +18,8 @@ import { PokerMainModule } from './poker-main/poker-main.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    PokerMainModule
+    PokerMainModule,
+    SocketIoModule.forRoot(socketConfig)
   ],
   providers: [],
   bootstrap: [AppComponent]
