@@ -24,7 +24,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:4200"
+        origin: ["http://localhost:4200", "https://scrum-poker-air.web.app"]
     }
 });
 
@@ -36,7 +36,9 @@ const io = new Server(httpServer, {
 //     }
 // })
 
-// app.use(cors());
+// app.use(cors({
+//   origin: ["http://localhost:4200", "https://scrum-poker-air.web.app/"]
+// }));
 
 io.on("connection", (socket) => {
   console.log('connected', socket);

@@ -3,8 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '**',
+    path: 'home',
     loadChildren: () => import('./poker-main/poker-main.module').then((m) => m.PokerMainModule)
+  },
+  {
+    path: '**',
+    redirectTo: 'home'
   }
 ];
 
