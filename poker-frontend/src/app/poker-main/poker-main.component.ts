@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ColumnType, tableColumns } from '../helper/tableColumns.model';
-import { usersDataModel } from '../helper/user-data.model';
+import { SocketInfo, usersDataModel } from '../helper/user-data.model';
 import {MatTableDataSource} from '@angular/material/table';
 import { Socket } from 'ngx-socket-io';
 import { SocketService } from '../helper/socket.service';
@@ -62,26 +62,43 @@ export class PokerMainComponent implements OnInit {
 
     this.socketService.recieveBroadCastForNewUser().subscribe((res) => {
       if (!this.isNullOrUndefined(res)) {
-        this.dataSource.data.push({
-          name: res.name,
+        console.log(res);
+        this.users.push({
           email: res.email,
+          name: res.name,
           hidden: false
-        })
+        });
+      this.dataSource.data = this.users;
+        // this.dataSource.data.push({
+        //   name: res.name,
+        //   email: res.email,
+        //   hidden: false
+        // })
       }
+    });
+
+    this.socketService.recieveExisitngUsers().subscribe((res) => {
+      for (let user of res) {
+        if (user.email !== this.newUser.email) {
+          this.users.push(user);
+        }
+      }
+      this.dataSource.data = this.users;
     })
 
     // Create new user object
     const userInfo: SocketInfo = Object.assign(<SocketInfo>{
       email: this.newUser.email,
       room: this.newUser.roomNumber,
-      name: this.newUser.name
+      name: this.newUser.name,
+      hidden: false
     });
 
     // emit new user to socket
     this.socketService.joinRoom(userInfo);
 
     // push new user to datasource
-    this.dataSource.data.push({
+    this.users.push({
       name: this.newUser.name,
       email: this.newUser.email,
       hidden: false
@@ -122,15 +139,4 @@ interface NavigationInterface {
     roomNumber: string,
     email: string
   }
-}
-
-export interface SocketInfo {
-  email: string,
-  name: string,
-  room: string
-}
-
-export interface scoreInfo extends SocketInfo {
-  score: number, 
-  hidden: boolean
 }

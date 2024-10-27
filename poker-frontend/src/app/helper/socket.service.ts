@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Socket } from "ngx-socket-io";
 import { Observable } from "rxjs";
-import { SocketInfo } from "../poker-main/poker-main.component";
+import { SocketInfo } from "./user-data.model";
+// import { Soc } from "";
 
 
 @Injectable({
@@ -24,5 +25,9 @@ export class SocketService {
 
     recieveBroadCastForNewUser(): Observable<SocketInfo> {
         return this.socket.fromEvent('newUser')
+    }
+
+    recieveExisitngUsers(): Observable<SocketInfo[]> {
+        return this.socket.fromEvent('existingUsers')
     }
 }

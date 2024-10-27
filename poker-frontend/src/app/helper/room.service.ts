@@ -6,7 +6,8 @@ import { Observable } from "rxjs";
     providedIn: 'root'
 })
 export class RoomService {
-    private apiUrl = 'http://localhost:3000/api';
+    // private apiUrl = 'http://localhost:3000/api';
+    private apiUrl = 'https://web-sockets-backend.onrender.com/api';
 
     constructor(private http: HttpClient) {}
 

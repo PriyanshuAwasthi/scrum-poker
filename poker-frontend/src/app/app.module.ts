@@ -9,8 +9,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { JoinRoomDialogComponent } from './join-room-dialog/join-room-dialog.component';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 
+// const socketConfig: SocketIoConfig = {
+//   url: 'http://localhost:3000',
+//   options: {}
+// }
+
 const socketConfig: SocketIoConfig = {
-  url: 'http://localhost:3000',
+  url: 'https://web-sockets-backend.onrender.com/',
   options: {}
 }
 

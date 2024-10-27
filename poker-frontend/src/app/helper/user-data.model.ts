@@ -1,6 +1,11 @@
 export interface usersDataModel {
-    email?: string;
-    name: string;
-    estimate?: number;
-    hidden?: boolean;
+    email: string; //mandatory
+    name: string; //mandatory
+    estimate?: number; 
+    hidden: boolean; //mandatory
 }
+
+export interface SocketInfo extends usersDataModel {
+    room: string //mandatory
+  }
+  
