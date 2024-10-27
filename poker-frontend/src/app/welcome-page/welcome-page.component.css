@@ -1,0 +1,27 @@
+@import '@angular/material/prebuilt-themes/indigo-pink';
+@import '@angular/material/prebuilt-themes/pink-bluegrey';
+@import '@angular/material/prebuilt-themes/purple-green';
+@import '@angular/material/prebuilt-themes/deeppurple-amber';
+
+.main-heading {
+    justify-content: center;
+    display: flex;
+    font-family: monospace;
+    color: darkslateblue;
+}
+
+.button {
+    justify-content: space-between;
+    display: flex;
+    width: 550px
+}
+
+.custom {
+    background-color: silver !important;
+}
+
+.center {
+    padding-top: 30px;
+    display:flex;
+    justify-content: center;
+}

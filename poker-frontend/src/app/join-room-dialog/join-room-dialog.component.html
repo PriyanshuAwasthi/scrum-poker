@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>{{ data.type === 'Create' ? 'Create a Room' : 'Join a Room' }}</h2>
+<mat-dialog-content>
+    @if (data.type === 'Create') {
+        <div>
+            Set-up in seconds. 
+            Use the instant room feature for future plannings.
+            All we need is a display Name and your Email.
+        </div>
+    } @else {
+        <div>
+            Set-up in seconds. 
+            Use the instant room feature for future plannings.
+            All we need is a Room Number, display Name and your Email.
+        </div>
+    }
+    <form [formGroup]="form">
+        <div class="name-container">
+            @if (data.type === 'Join') {
+                <mat-form-field class="example-full-width">
+                    <mat-label>Room Number</mat-label>
+                    <input matInput formControlName="roomNumber">
+                    <mat-error>{{roomNumberError()}}</mat-error>
+                </mat-form-field>
+            }
+            <mat-form-field class="example-full-width">
+                <mat-label>Display name</mat-label>
+                <input matInput formControlName="name">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email">
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="actions-buttons">
+    <button [disabled]="form.invalid" mat-flat-button (click)="onProceed()">
+        Proceed
+    </button>
+</mat-dialog-actions>
+

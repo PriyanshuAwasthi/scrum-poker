@@ -1,0 +1,12 @@
+.example-full-width {
+    min-width: 400px;
+    display: flex;
+}
+
+.name-container {
+    padding-top: 20px;
+}
+
+.actions-buttons {
+    justify-content: end;
+}

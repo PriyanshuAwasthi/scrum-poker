@@ -8,12 +8,11 @@ import {MatCardModule} from '@angular/material/card';
 import {MatDivider} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
 import { PokerRoutingModule } from "./poker-main-routin.module";
-import { SocketService } from "../helper/socket.service";
 
 
 @NgModule({
     declarations: [PokerMainComponent],
-    imports: [PokerRoutingModule, MatIconModule, CommonModule, MatTableModule, CommonModule, MatButtonModule, MatTooltipModule, MatCardModule, MatDivider],
+    imports: [MatButtonModule, PokerRoutingModule, MatIconModule, CommonModule, MatTableModule, CommonModule, MatButtonModule, MatTooltipModule, MatCardModule, MatDivider],
     providers: []
 })
 export class PokerMainModule {}

@@ -4,6 +4,8 @@ import { usersDataModel } from '../helper/user-data.model';
 import {MatTableDataSource} from '@angular/material/table';
 import { Socket } from 'ngx-socket-io';
 import { SocketService } from '../helper/socket.service';
+import { Router } from '@angular/router';
+import { DialogResult } from '../join-room-dialog/join-room-dialog.component';
 
 @Component({
   selector: 'app-poker-main',
@@ -15,66 +17,14 @@ export class PokerMainComponent implements OnInit {
   protected readonly ColumnType = ColumnType;
   numberOfDays: Array<number> = [0.5, 1, 2, 3, 4, 5];
   estimatesHidden: boolean = false;
+  newUser!: {name: string, roomNumber: string, email: string};
 
   backednRes: {
     sender: string,
     user: string
   }[] = [];
 
-  users: usersDataModel[] = [
-    {
-      name: 'Priyanshu',
-      hidden: true,
-      estimate: 4
-    },
-    {
-      name: 'div',
-      estimate: 3,
-      hidden: true
-    },
-    {
-      name: 'xyz'
-    },
-    {
-      name: 'xyz'
-    },
-    {
-      name: 'xyz'
-    },
-    {
-      name: 'div'
-    },
-    {
-      name: 'xyz'
-    },
-    {
-      name: 'xyz'
-    },
-    {
-      name: 'xyz'
-    },
-    {
-      name: 'div'
-    },
-    {
-      name: 'xyz'
-    },
-    {
-      name: 'xyz'
-    },
-    {
-      name: 'xyz'
-    },
-    {
-      name: 'xyz'
-    },
-    {
-      name: 'xyz'
-    },
-    {
-      name: 'Anushka'
-    }
-  ];
+  users: usersDataModel[] = [];
 
   initColumns: tableColumns[] = [
     {
@@ -93,14 +43,49 @@ export class PokerMainComponent implements OnInit {
 
   displayedColumns = this.initColumns.map((column) => column.field);
 
-  constructor(@Inject(SocketService) private socketService: SocketService) {}
+  constructor(
+    @Inject(SocketService) private socketService: SocketService,
+    private router: Router
+  ){
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state) {
+      const state = navigation.extras.state as NavigationInterface;
+      this.newUser = state.result;
+    }
+    // console.log((navigation as DialogResult).roomNumber);
+  }
+
+
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.users);
     this.socketService.testReceivingMessage().subscribe((res) => console.log(res));
-    // console.log('heyyy');
-    // this.socket.fromEvent('received').pipe((data) => data).subscribe((data) => {
-    //   console.log(data);
-    // })
+
+    this.socketService.recieveBroadCastForNewUser().subscribe((res) => {
+      if (!this.isNullOrUndefined(res)) {
+        this.dataSource.data.push({
+          name: res.name,
+          email: res.email,
+          hidden: false
+        })
+      }
+    })
+
+    // Create new user object
+    const userInfo: SocketInfo = Object.assign(<SocketInfo>{
+      email: this.newUser.email,
+      room: this.newUser.roomNumber,
+      name: this.newUser.name
+    });
+
+    // emit new user to socket
+    this.socketService.joinRoom(userInfo);
+
+    // push new user to datasource
+    this.dataSource.data.push({
+      name: this.newUser.name,
+      email: this.newUser.email,
+      hidden: false
+    })
   }
 
   dataAccessor(element: usersDataModel, column: string): string | any {
@@ -127,7 +112,25 @@ export class PokerMainComponent implements OnInit {
 
 
   handleTestButtonClick(): void {
-    // this.socket.emit('score', 2);
     this.socketService.testSendingMethod('3');
   }
+}
+
+interface NavigationInterface {
+  result: {
+    name: string,
+    roomNumber: string,
+    email: string
+  }
+}
+
+export interface SocketInfo {
+  email: string,
+  name: string,
+  room: string
+}
+
+export interface scoreInfo extends SocketInfo {
+  score: number, 
+  hidden: boolean
 }
