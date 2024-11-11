@@ -4,7 +4,6 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const { faker } = require('@faker-js/faker')
 const axios = require('axios');
-// const functions = require("firebase-functions")
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -20,7 +19,7 @@ app.use(cors({
 }));
 
 let rooms = new Set();
-let users = new Map();
+let roomMappedUsers = new Map();
 
 app.get('/api/check/:roomNumber', (req, res) => {
   const roomNumber = req.params.roomNumber;
@@ -48,31 +47,96 @@ app.get('/', (req, res) => {
 
 io.on("connection", (socket) => {
 
-  // Join room
-  socket.on('join', (data) => {
-    socket.join(data.room);
-    if (users.has(data.room)) {
-      socket.emit('existingUsers', users.get(data.room));
-      users.get(data.room).push(data);
+  // When New User Joins
+  // newUser of type user having all the info
+  socket.on('join', (newUser) => {
+    socket.join(newUser.room);
+    // If room already exists
+    if (roomMappedUsers.has(newUser.room)) {
+      // return existing users of the room to the newly joined user
+      // Will return the newUser as existing user if the user already exists (let's say the user reloaded the page)
+      socket.emit('existingUsers', roomMappedUsers.get(newUser.room));
+      
+      // update existing users by adding the new user
+      var exist = roomMappedUsers.get(newUser.room);
+      let flag = false;
+      for (let u of exist) {
+        if (u.email === newUser.email) {
+          flag = true;
+          break;
+        }
+      }
+      // add only if it does not already exists
+      if (!flag) {
+        exist.push(newUser);
+        roomMappedUsers.set(newUser.room, exist);
+      }
     } else {
-      users.set(data.room, [data]);
+      // make a new room and user entry in the map
+      roomMappedUsers.set(newUser.room, [newUser]);
+      socket.emit('existingUsers', roomMappedUsers.get(newUser.room));
     }
-    socket.to(data.room).emit('newUser', data);
-  })
-  socket.on('score', (data) => {
-    console.log(data);
-    io.emit('received', {data: data, message: 'This is a test message'});
+    // return the new user to every other user except the new user
+    socket.to(newUser.room).emit('newUser', newUser);
   });
+
+
+  // When a score is selected
+  // user contains all the info
+  socket.on('updateScore', (user) => {
+    for (const entity of roomMappedUsers.get(user.room)) {
+      if (entity.email === user.email) {
+        // Update the score of the user in database
+        Object.assign(entity, user);
+        // break;
+      }
+      else { // was not here 
+        entity.estimatesHidden = true // was not here 
+      }
+    }
+    // Return the user who changed the score to all other users except this user
+    io.to(user.room).emit('scoreUpdated', user);
+  });
+
+
+  // When a user hides/unhide the cards
+  // toggleCards of type boolean and roomNumber
+  socket.on('toggleCards', (toggleCards) => {
+    // return whether estimates are hidden or not
+    // socket.to(toggleCards.room).emit('toggleScoreCards', toggleCards.estimatesHidden);
+    io.to(toggleCards.room).emit('toggleScoreCards', toggleCards.estimatesHidden);
+    var existing = roomMappedUsers.get(toggleCards.room);
+    for (let u of existing) {
+      // Update data source for hiddenEstimates
+        u.hidden = toggleCards.estimatesHidden;
+      u.estimatesHidden = toggleCards.estimatesHidden;
+    }
+  })
+
+
+  socket.on('deleteEstimates', (room) => {
+    var existing = roomMappedUsers.get(room);
+    for (let u of existing) {
+      u.hidden = false;
+      u.estimatesHidden = false;
+      u.estimate = -1;
+    }
+    io.to(room).emit('delete', true);
+  })
+
+  socket.on('triggerAvg', (room) => {
+    io.to(room).emit('showAvg', true);
+  })
 });
 
 
 const url = `https://web-sockets-backend.onrender.com/`; // Replace with your Render URL
-const interval = 30000; // Interval in milliseconds (30 seconds)
+const interval = 48000; // Interval in milliseconds (48 seconds)
 
 function reloadWebsite() {
   axios.get(url)
     .then(response => {
-      console.log(`Reloaded at ${new Date().toISOString()}: Status Code ${response.status}`);
+      console.log('');
     })
     .catch(error => {
       console.error(`Error reloading at ${new Date().toISOString()}:`, error.message);
@@ -87,3 +151,12 @@ httpServer.listen(PORT, () => {
 });
 
 // exports.api = functions.https.onRequest(app);
+
+
+// user 
+// email: string; //mandatory
+// name: string; //mandatory
+// estimate?: number; 
+// hidden: boolean; //mandatory 
+// room: string, //mandatory
+// estimatesHidden: boolean //mandatory

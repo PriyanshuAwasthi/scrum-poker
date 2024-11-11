@@ -21,8 +21,7 @@ export class WelcomePageComponent {
     });
     dialogRef.afterClosed().subscribe((result: DialogResult) => {
       if (!this.isNullOrUndefined(result)) {
-        console.log(result);
-        this.router.navigate([`/room/${result.roomNumber}`], {
+        this.router.navigate([`/room/${result.room}`], {
           state: {
             result
           }

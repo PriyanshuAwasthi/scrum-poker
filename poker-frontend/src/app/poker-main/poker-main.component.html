@@ -6,9 +6,6 @@
                     <div class="header">
                         Scrum Poker
                     </div>
-                    @for (item of backednRes; track $index) {
-                        {{item.user}}
-                    }
                 </section>
             </mat-card-title>
         </mat-card-header>
@@ -18,13 +15,13 @@
                 <div class="inline-container">
                     <div class="days-container">
                         <div class="custom-button-container">
-                            <button mat-fab matTooltip="Don't know what to estimate?">
+                            <button (click)="handleDaysButtonClick(-2)" mat-fab matTooltip="Don't know what to estimate?">
                                 <mat-icon>help_outline</mat-icon>
                             </button>
                         </div>
                         @for (day of numberOfDays; track $index) {
                             <div class="button-container" [matTooltip]="day + ' day work'">
-                                <button (click)="handleTestButtonClick()" mat-fab >
+                                <button (click)="handleDaysButtonClick(day)" mat-fab >
                                     {{day}}
                                 </button>
                             </div>
@@ -39,11 +36,14 @@
             </section>
             <section>
                 <div class="inline-container-2">
-                    <button mat-button>
+                    <button mat-button (click)="removeModeToggle()">
                         <mat-icon>remove_circle_outline</mat-icon>
                     </button>
-                    <button mat-raised-button>
+                    <button mat-raised-button class="button-red" (click)="deleteEstimates()">
                         Delete Estimates
+                    </button>
+                    <button mat-raised-button (click)="showAverage()">
+                        Average
                     </button>
                     @if (estimatesHidden) {
                         <button (click)="showEstimate()" mat-raised-button class="button-grey">
@@ -57,7 +57,9 @@
                     
                 </div>
             </section>
+            <!-- <form [formGroup]="form">
 
+            </form> -->
             <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                 @for (column of initColumns; track column.field) {
                     <ng-container [matColumnDef]="column.field">
@@ -66,16 +68,20 @@
                         </mat-header-cell>
                         <mat-cell *matCellDef="let element; let i = index">
                             @if (column.type === ColumnType.TEXT) {
-                                {{dataAccessor(element, column.field)}}
+                                {{ dataAccessor(element, column.field)}}
                             }
                             @else {
                                 <div class="inside-card">
                                     @if (element.hidden) {
                                         <mat-icon>lock</mat-icon>
                                     } @else {
-                                        {{ dataAccessor(element, column.field) || '_' }}
+                                        @if (isNullOrUndefined(dataAccessor(element, column.field))) {
+                                            <mat-icon>contact_support</mat-icon>
+                                        }
+                                        @else {
+                                            {{ dataAccessor(element, column.field) }}
+                                        }
                                     }
-                                    
                                 </div>
                             }
                         </mat-cell>
@@ -87,8 +93,3 @@
         </mat-card-content>
     </mat-card>
 </div>
-
-
-
-<!-- TODO - flip single card -->
-

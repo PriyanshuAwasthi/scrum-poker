@@ -6,11 +6,15 @@ import { AppComponent } from './app.component';
 import { PokerMainModule } from './poker-main/poker-main.module';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { HttpClientModule } from '@angular/common/http';
-import { JoinRoomDialogComponent } from './join-room-dialog/join-room-dialog.component';
-import { WelcomePageComponent } from './welcome-page/welcome-page.component';
+import { RoomGuard } from './guards/room.guard';
 
 // const socketConfig: SocketIoConfig = {
 //   url: 'http://localhost:3000',
+//   options: {}
+// }
+
+// const socketConfig: SocketIoConfig = {
+//   url: 'https://web-sockets-backend.onrender.com/',
 //   options: {}
 // }
 
@@ -31,7 +35,7 @@ const socketConfig: SocketIoConfig = {
     BrowserAnimationsModule,
     SocketIoModule.forRoot(socketConfig)
   ],
-  providers: [],
+  providers: [RoomGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

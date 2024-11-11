@@ -6,6 +6,7 @@ export interface usersDataModel {
 }
 
 export interface SocketInfo extends usersDataModel {
-    room: string //mandatory
-  }
+    room: string; //mandatory
+    estimatesHidden: boolean //mandatory
+}
   

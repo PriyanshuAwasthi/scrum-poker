@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { RoomGuard } from './guards/room.guard';
+import { PokerMainComponent } from './poker-main/poker-main.component';
 
 const routes: Routes = [
   {
@@ -7,8 +9,9 @@ const routes: Routes = [
     loadChildren: () => import('./welcome-page/welcome-page.module').then((m) => m.WelcomePageModule)
   },
   {
-    path: 'room/:roomNumber',
-    loadChildren: () => import('./poker-main/poker-main.module').then((m) => m.PokerMainModule)
+    path: 'room/:room',
+    loadChildren: () => import('./poker-main/poker-main.module').then((m) => m.PokerMainModule),
+    canActivate: [RoomGuard]
   },
   {
     path: '**',

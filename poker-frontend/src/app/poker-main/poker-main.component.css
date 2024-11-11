@@ -43,6 +43,11 @@
 
 :host ::ng-deep .button-grey {
   background-color: #d3d3d3 !important;
+  min-width: 73px;
+}
+
+:host ::ng-deep .button-red {
+  background-color: #f02a00 !important;
 }
 
 .inline-container-without-padding {
